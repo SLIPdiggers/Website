@@ -1,22 +1,18 @@
 //"use strict"; //modern js capability
 
+/*  "In other words, capital-named constants are only used as aliases for “hard-coded” values." https://javascript.info/variables
+	"Backticks are “extended functionality” quotes. They allow us to embed variables and expressions into a string by wrapping them in ${…}" https://javascript.info/types
+	"in the C language and in Java it is called “char”. In JavaScript, there is no such type. There’s only one type: string " https://javascript.info/types
+	"The typeof operator returns the type of the argument." https://javascript.info/types
+	
+*/
+let fuzzy_timer = 999;
+
 let canvas = document.getElementById('video');
 let canvas_width = document.getElementsByTagName('html')[0].clientWidth;
 let	canvas_height = document.getElementsByTagName('html')[0].clientHeight;
 let	canvas_centre = [canvas_width / 2, canvas_height / 2];
 window.onresize = setCanvasSize();
-
-let NUM_STARS = 20;
-let TRAVEL_SPEED = 2;
-let stars_array = [];
-
-let r = 0;
-let g = 0;
-let b = 255;
-let rgb_string = "";
-let r_ascend = true;
-let g_ascend = false;
-let b_ascend = false;
 
 function setCanvasSize(){
 	canvas_width = document.getElementsByTagName('html')[0].clientWidth;
@@ -26,10 +22,7 @@ function setCanvasSize(){
 	canvas.height = canvas_height;
 }
 
-function run_script(){
-	
-
-	//use mocha for testing?
+function run_script(){		//use mocha for testing?
 	
 	setInterval(draw_overlay, 15);
 	if (canvas.getContext) {
@@ -38,31 +31,16 @@ function run_script(){
 	}
 }
 
-class Star {
+class AlphaSprite {
 	constructor(x_pos, y_pos) {
 		if (x_pos > -1 && x_pos < canvas_width + 1) this.x_pos = x_pos;
 		else this.x_pos = -1;
-
 		if (y_pos > -1 && y_pos < canvas_height + 1) this.y_pos = y_pos;
 		else this.y_pos = -1;
+		
 		this.position = [this.x_pos, this.y_pos];
 		this.travel_angle = [canvas_centre - x_pos, canvas_centre - y_pos];
 		this.travel_speed = 1;
-	}
-}
-
-
-function draw_stars() {
-	let ctx = canvas.getContext('2d');
-	while (stars_array.length < NUM_STARS) {
-		stars_array.push(new Star(Math.random * canvas_width, Math.random * canvas_height));
-	}
-	for (i = 0; i <= stars_array.length; i++) {
-		if (stars_array[0].x_pos < 0 || stars_array[0].x_pos > canvas_width || stars_array[0].y_pos < 0 || stars_array[0].y_pos > canvas_height) stars_array.shift();
-		(stars_array[i].position - stars_array[i].travel_angle) * stars_array.travel_speed;
-		stars_array[i].travel_speed++;
-		ctx.fillStyle = 'rgba(255, 255, 255, 255)';
-		ctx.fillRect(stars_array[i].position[0], stars_array[i].position[1], 1, 1);
 	}
 }
 
@@ -73,7 +51,15 @@ function draw_static(ctx) {
 	ctx.fillRect(0, 0, canvas_width, canvas_height);
 		
 	for (let i = 0; i < (canvas_width>canvas_height?canvas_width:canvas_height)*10; i++) {
-	let greyScale = Math.floor(Math.random()*255);
+	
+	fuzzy_timer--;
+	if (fuzzy_timer > 255){
+	//	let greyScale = Math.floor(Math.random()*255);
+	}else{
+		
+	}
+	//ctx.fillStyle = `rgba(${greyScale}, ${greyScale}, ${greyScale}, 255)`;
+	
 	ctx.fillStyle = `rgba(${greyScale}, ${greyScale}, ${greyScale}, 255)`;
 	ctx.fillRect(Math.random() * canvas_width, Math.random() * canvas_height, 2, 2);
 	}
@@ -81,9 +67,14 @@ function draw_static(ctx) {
 
 function draw_overlay() {
 	
-	let ctx = canvas.getContext('2d');
-	draw_static(ctx);
+	if(fuzzy_timer > 0){
+		fuzzy_timer--;
+	}
 	
+	let ctx = canvas.getContext('2d');
+	if fuzzy_timer > 0 {
+		draw_static(ctx);
+	}
 
 	if (canvas.getContext) {
 		
